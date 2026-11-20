@@ -1,5 +1,38 @@
 <img src="./microcks-banner.png" width="600"> 
 
+> ## About this fork: AMQP 1.0 support
+>
+> This is an unofficial fork of [microcks/microcks](https://github.com/microcks/microcks). The `feat/amqp1-support`
+> branch adds **AMQP 1.0 support to the Async Minion**, next to the existing AMQP 0.9.1 (RabbitMQ) support. It is not
+> part of an official Microcks release.
+>
+> **What was added**
+>
+> * Mocking: AsyncAPI operations carrying an `amqp1` binding are published to an AMQP 1.0 broker, on a queue or a topic.
+> * Testing: a new `amqp1://host:port/queue|topic/name` test endpoint consumes messages from an AMQP 1.0 broker.
+> * Configuration for the minion, the uber distribution, the Helm chart and the Docker / Podman Compose samples.
+> * UI: AMQP 1.0 endpoint, destination and test endpoint help.
+>
+> Full documentation is in [minions/async/AMQP1.md](./minions/async/AMQP1.md).
+>
+> **What was tested**
+>
+> * The 94 unit tests of the Async Minion pass, including 12 new ones for AMQP 1.0.
+> * 4 new integration tests pass against a real ActiveMQ Artemis 2.32.0 broker started with Testcontainers: publishing
+>   to a queue, publishing to a topic with headers, consuming from a queue and consuming from a topic.
+> * The code is formatted with the project `spotless` rules.
+>
+> **TODO: not verified yet**
+>
+> * [ ] Other integration tests: the existing Kafka, NATS, SQS, PubSub and IBM MQ ones were not run. One constructor
+>   argument was changed in each of those five test files and they compile.
+> * [ ] Webapp UI: the Angular changes were not built or viewed in a browser.
+> * [ ] Native image: the native build with the new dependency was not tried.
+> * [ ] Helm chart: the template changes were not rendered.
+> * [ ] Brokers other than ActiveMQ Artemis (Azure Service Bus, Solace, Qpid...) were not tested.
+>
+> This work was prepared with the assistance of a generative AI tool (Claude Code).
+
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/microcks/microcks/build-verify.yml?logo=github&style=for-the-badge)](https://github.com/microcks/microcks/actions)
 [![Container](https://img.shields.io/badge/dynamic/json?color=blueviolet&logo=docker&style=for-the-badge&label=Quay.io&query=tags[1].name&url=https://quay.io/api/v1/repository/microcks/microcks/tag/?limit=10&page=1&onlyActiveTags=true)](https://quay.io/repository/microcks/microcks?tab=tags)
 [![Version](https://img.shields.io/maven-central/v/io.github.microcks/microcks?color=blue&style=for-the-badge)]((https://search.maven.org/artifact/io.github.microcks/microcks))
