@@ -61,6 +61,7 @@ class ProducerManagerTest {
    private MQTTProducerManager mqttProducerManager;
    private NATSProducerManager natsProducerManager;
    private AMQPProducerManager amqpProducerManager;
+   private AMQP1ProducerManager amqp1ProducerManager;
    private GooglePubSubProducerManager googlePubSubProducerManager;
    private AmazonSQSProducerManager amazonSQSProducerManager;
    private AmazonSNSProducerManager amazonSNSProducerManager;
@@ -83,6 +84,7 @@ class ProducerManagerTest {
       mqttProducerManager = mock(MQTTProducerManager.class);
       natsProducerManager = mock(NATSProducerManager.class);
       amqpProducerManager = mock(AMQPProducerManager.class);
+      amqp1ProducerManager = mock(AMQP1ProducerManager.class);
       googlePubSubProducerManager = mock(GooglePubSubProducerManager.class);
       amazonSQSProducerManager = mock(AmazonSQSProducerManager.class);
       amazonSNSProducerManager = mock(AmazonSNSProducerManager.class);
@@ -90,15 +92,15 @@ class ProducerManagerTest {
 
       producerManager = new ProducerManager(mockRepository, schemaRegistry,
             new ProducerManager.ProducerDependencies(kafkaProducerManager, mqttProducerManager, natsProducerManager,
-                  amqpProducerManager, googlePubSubProducerManager, amazonSQSProducerManager, amazonSNSProducerManager,
-                  null),
+                  amqpProducerManager, amqp1ProducerManager, googlePubSubProducerManager, amazonSQSProducerManager,
+                  amazonSNSProducerManager, null),
             null);
 
       // Set the supportedBindings field via reflection (normally injected by Quarkus).
       Field supportedBindingsField = ProducerManager.class.getDeclaredField("supportedBindings");
       supportedBindingsField.setAccessible(true);
       supportedBindingsField.set(producerManager,
-            new String[] { "KAFKA", "MQTT", "NATS", "WS", "AMQP", "GOOGLEPUBSUB", "SQS", "SNS" });
+            new String[] { "KAFKA", "MQTT", "NATS", "WS", "AMQP", "AMQP1", "GOOGLEPUBSUB", "SQS", "SNS" });
    }
 
    // -----------------------------------------------------------------------
@@ -262,6 +264,22 @@ class ProducerManagerTest {
 
       verify(amqpProducerManager).publishMessage(eq("queue"), eq("amqp-queue"), eq("my-routing-key"),
             eq("AMQP content"), any());
+   }
+
+   @Test
+   void testProduceAsyncMockMessagesAt_routesToAMQP1() {
+      AsyncMockDefinition definition = buildMockDefinition("AMQP1", "AMQP 1.0 content");
+      // Set binding details needed for AMQP 1.0.
+      Binding amqp1Binding = definition.getOperation().getBindings().get("AMQP1");
+      amqp1Binding.setDestinationType("topic");
+
+      when(mockRepository.getMockDefinitionsByFrequency(45L)).thenReturn(Set.of(definition));
+      when(amqp1ProducerManager.getDestinationName(any(), any())).thenReturn("amqp1-topic");
+
+      producerManager.produceAsyncMockMessagesAt(45L);
+
+      verify(amqp1ProducerManager).publishMessage(eq("topic"), eq("amqp1-topic"), eq("AMQP 1.0 content"), any());
+      verifyNoInteractions(amqpProducerManager);
    }
 
    @Test

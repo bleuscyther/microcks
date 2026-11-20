@@ -78,6 +78,7 @@ public class ProducerManager {
    final MQTTProducerManager mqttProducerManager;
    final NATSProducerManager natsProducerManager;
    final AMQPProducerManager amqpProducerManager;
+   final AMQP1ProducerManager amqp1ProducerManager;
    final GooglePubSubProducerManager googlePubSubProducerManager;
    final AmazonSQSProducerManager amazonSQSProducerManager;
    final AmazonSNSProducerManager amazonSNSProducerManager;
@@ -98,6 +99,7 @@ public class ProducerManager {
       final MQTTProducerManager mqttProducerManager;
       final NATSProducerManager natsProducerManager;
       final AMQPProducerManager amqpProducerManager;
+      final AMQP1ProducerManager amqp1ProducerManager;
       final GooglePubSubProducerManager googlePubSubProducerManager;
       final AmazonSQSProducerManager amazonSQSProducerManager;
       final AmazonSNSProducerManager amazonSNSProducerManager;
@@ -106,12 +108,14 @@ public class ProducerManager {
       @Inject
       public ProducerDependencies(KafkaProducerManager kafkaProducerManager, MQTTProducerManager mqttProducerManager,
             NATSProducerManager natsProducerManager, AMQPProducerManager amqpProducerManager,
-            GooglePubSubProducerManager googlePubSubProducerManager, AmazonSQSProducerManager amazonSQSProducerManager,
-            AmazonSNSProducerManager amazonSNSProducerManager, IBMMQProducerManager ibmmqProducerManager) {
+            AMQP1ProducerManager amqp1ProducerManager, GooglePubSubProducerManager googlePubSubProducerManager,
+            AmazonSQSProducerManager amazonSQSProducerManager, AmazonSNSProducerManager amazonSNSProducerManager,
+            IBMMQProducerManager ibmmqProducerManager) {
          this.kafkaProducerManager = kafkaProducerManager;
          this.mqttProducerManager = mqttProducerManager;
          this.natsProducerManager = natsProducerManager;
          this.amqpProducerManager = amqpProducerManager;
+         this.amqp1ProducerManager = amqp1ProducerManager;
          this.googlePubSubProducerManager = googlePubSubProducerManager;
          this.amazonSQSProducerManager = amazonSQSProducerManager;
          this.amazonSNSProducerManager = amazonSNSProducerManager;
@@ -135,6 +139,7 @@ public class ProducerManager {
       this.mqttProducerManager = dependencies.mqttProducerManager;
       this.natsProducerManager = dependencies.natsProducerManager;
       this.amqpProducerManager = dependencies.amqpProducerManager;
+      this.amqp1ProducerManager = dependencies.amqp1ProducerManager;
       this.googlePubSubProducerManager = dependencies.googlePubSubProducerManager;
       this.amazonSQSProducerManager = dependencies.amazonSQSProducerManager;
       this.amazonSNSProducerManager = dependencies.amazonSNSProducerManager;
@@ -173,6 +178,10 @@ public class ProducerManager {
                   case AMQP:
                      Binding bindingDef = definition.getOperation().getBindings().get(binding);
                      produceAMQPMockMessages(definition, bindingDef);
+                     break;
+                  case AMQP1:
+                     Binding amqp1BindingDef = definition.getOperation().getBindings().get(binding);
+                     produceAMQP1MockMessages(definition, amqp1BindingDef);
                      break;
                   case GOOGLEPUBSUB:
                      produceGooglePubSubMockMessages(definition);
@@ -252,6 +261,11 @@ public class ProducerManager {
          case AMQP:
             Binding bindingDef = definition.getOperation().getBindings().get(binding);
             produceAMQPMockMessage(definition, bindingDef, eventMessage,
+                  renderEventMessageContent(eventMessage, command.getRequest(), command.getResponse()));
+            break;
+         case AMQP1:
+            Binding amqp1BindingDef = definition.getOperation().getBindings().get(binding);
+            produceAMQP1MockMessage(definition, amqp1BindingDef, eventMessage,
                   renderEventMessageContent(eventMessage, command.getRequest(), command.getResponse()));
             break;
          case GOOGLEPUBSUB:
@@ -473,6 +487,22 @@ public class ProducerManager {
       amqpProducerManager.publishMessage(bindingDef.getDestinationType(), destinationName, bindingDef.getRoutingKey(),
             renderedContent, amqpProducerManager.renderEventMessageHeaders(TemplateEngineFactory.getTemplateEngine(),
                   eventMessage.getHeaders()));
+   }
+
+   /** Take care publishing AMQP 1.0 mock messages for definition. */
+   protected void produceAMQP1MockMessages(AsyncMockDefinition definition, Binding bindingDef) {
+      for (EventMessage eventMessage : getPureEventMessages(definition)) {
+         produceAMQP1MockMessage(definition, bindingDef, eventMessage, renderEventMessageContent(eventMessage));
+      }
+   }
+
+   /** Take care publishing AMQP 1.0 message for definition. */
+   protected void produceAMQP1MockMessage(AsyncMockDefinition definition, Binding bindingDef, EventMessage eventMessage,
+         String renderedContent) {
+      String destinationName = amqp1ProducerManager.getDestinationName(definition, eventMessage);
+      String destinationType = bindingDef != null ? bindingDef.getDestinationType() : null;
+      amqp1ProducerManager.publishMessage(destinationType, destinationName, renderedContent, amqp1ProducerManager
+            .renderEventMessageHeaders(TemplateEngineFactory.getTemplateEngine(), eventMessage.getHeaders()));
    }
 
    /** Take care publishing Google PubSub mock messages for definition. */

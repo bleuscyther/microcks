@@ -314,6 +314,16 @@ Here are below the configuration properties of the AMQP support feature:
 | `features.async.amqp` | `username` | **Optional**. The username to use for connecting to secured AMQP broker. Default to `microcks`.                                          |
 | `features.async.amqp` | `password` | **Optional**. The password to use for connecting to secured AMQP broker. Default to `microcks`.                                          |
 
+#### AMQP 1.0 feature details
+
+Here are below the configuration properties of the AMQP 1.0 support feature (see also the AMQP 1.0 documentation in `minions/async/AMQP1.md` of the repository):
+
+| Section                | Property   | Description                                                                                                                              |
+| ---------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `features.async.amqp1` | `url`      | **Optional**. The URL of AMQP 1.0 broker. Supports `host:5672` (plain AMQP), `host:5671` (auto TLS), or explicit `amqps://host:5671`. Default is undefined which means that feature is disabled. |
+| `features.async.amqp1` | `username` | **Optional**. The username to use for connecting to secured AMQP 1.0 broker. Default to `microcks`.                                      |
+| `features.async.amqp1` | `password` | **Optional**. The password to use for connecting to secured AMQP 1.0 broker. Default to `microcks`.                                      |
+
 #### NATS feature details
 
 Here are below the configuration properties of the NATS support feature:

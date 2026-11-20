@@ -371,6 +371,15 @@ features:
       username: microcks
       password: microcks
 
+    # Uncomment the amqp1.url and put a valid endpoint address below to enable AMQP 1.0 support.
+    amqp1:
+      # Plain AMQP 1.0 (dev/local):
+      #url: artemis:5672
+      # TLS secured broker, using explicit scheme or host:port form (amqps:// auto-detected for :5671):
+      #url: amqps://broker.example.com:5671
+      username: microcks
+      password: microcks
+
     # Uncomment the nats.url and put a valid endpoint address below to enable NATS support.
     nats:
       #url: nats:4222

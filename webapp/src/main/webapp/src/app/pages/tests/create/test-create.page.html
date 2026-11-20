@@ -280,6 +280,7 @@
         <p>
           Microcks supports <a (click)="testEndpoint = 'kafka://'"><code>kafka://</code></a>, <a (click)="testEndpoint = 'mqtt://'"><code>mqtt://</code></a>,
           <a (click)="testEndpoint = 'ws://'"><code>ws://</code></a>, <a (click)="testEndpoint = 'amqp://'"><code>amqp://</code></a>,
+          <a (click)="testEndpoint = 'amqp1://'"><code>amqp1://</code></a>,
           <a (click)="testEndpoint = 'nats://'"><code>nats://</code></a>, <a (click)="testEndpoint = 'googlepubsub://'"><code>googlepubsub://</code></a>,
           <a (click)="testEndpoint = 'sns://'"><code>sns://</code></a> and <a (click)="testEndpoint = 'sqs://'"><code>sqs://</code></a> bindings.
         </p>
@@ -367,6 +368,28 @@
           </button>
         </div>
         <pre><code>amqp://rabbitmq.example.com:5672/h/my-exchange-headers?h.h1=v1&h.h2=v2</code></pre>
+      </div>
+
+      <div *ngIf="testEndpoint && testEndpoint.startsWith('amqp1:')">
+        <br/>
+        <h5>AMQP 1.0 endpoint pattern</h5>
+
+        <p>AMQP 1.0 Test Endpoint have the following form with optional parameters placed just after a <code>?</code> and separated using <code>&</code> character:</p>
+
+        <pre><code>amqp1://amqp.broker.url:port/amqp.destination.type/amqp.destination.name[?param1=value1&param2=value2]</code></pre>
+
+        <p>The <code>amqp.destination.type</code> must be either <code>queue</code> or <code>topic</code>. Here are the optional parameters available:</p>
+        <ul>
+          <li><code>tls</code> can be set to <code>true</code> to force a TLS secured connection (it is automatically enabled on port <code>5671</code> or when the Secret holds a CA certificate).</li>
+        </ul>
+
+        <p>Here's below a sample endpoint for consuming a topic:</p>
+        <div style="position: absolute; right: 20px">
+          <button class="btn btn-default" (click)="testEndpoint = 'amqp1://artemis.example.com:5672/topic/my-topic'">
+            <span class="fa fa-paste"></span> Copy
+          </button>
+        </div>
+        <pre><code>amqp1://artemis.example.com:5672/topic/my-topic</code></pre>
       </div>
 
       <div *ngIf="testEndpoint && testEndpoint.startsWith('nats:')">

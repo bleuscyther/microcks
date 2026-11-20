@@ -181,16 +181,18 @@
           </span>
           <span *ngIf="hasBinding(item, 'AMQP1')">
             <dl class="dl-horizontal left">
-              <dt>AMQP destination:</dt>
+              <dt>AMQP 1.0 destination:</dt>
               <dd>
                 <div class="input-group">
-                  <input type="text" class="form-control" value="topic/UsersignedupAPI_0.1.0_user-signedup" disabled/>
+                  <input type="text" class="form-control" value="{{ formatAsyncDestination(item, getUnidirEvent(exchange).eventMessage, 'AMQP1') }}" disabled/>
                   <span class="input-group-addon">
                     <i class="fa fa-paste" tooltip="Copy to Clipboard" placement="top"
-                      (click)="copyToClipboard('topic/UsersignedupAPI_0.1.0_user-signedup')"></i>
+                        (click)="copyToClipboard(formatAsyncDestination(item, getUnidirEvent(exchange).eventMessage, 'AMQP1'))"></i>
                   </span>
                 </div>
               </dd>
+              <dt>AMQP 1.0 destination type:</dt>
+              <dd>{{ getBindingProperty(item, 'AMQP1', 'destinationType') || 'queue' }}</dd>
             </dl>
           </span>
         </div>

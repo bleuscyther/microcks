@@ -288,6 +288,10 @@
                     <dt>AMQP endpoint:</dt>
                     <dd><a>{{ asyncAPIFeatureEndpoint('AMQP') }}</a></dd>
                   </span>
+                  <span *ngIf="hasBinding(item, 'AMQP1')">
+                    <dt>AMQP 1.0 endpoint:</dt>
+                    <dd><a>{{ asyncAPIFeatureEndpoint('AMQP1') }}</a></dd>
+                  </span>
                   <span *ngIf="hasBinding(item, 'GOOGLEPUBSUB')">
                     <dt>Google PubSub project:</dt>
                     <dd><a>{{ asyncAPIFeatureEndpoint('GOOGLEPUBSUB') }}</a></dd>

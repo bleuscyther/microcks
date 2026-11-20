@@ -29,6 +29,7 @@
     <eclipse-paho.version>1.2.5</eclipse-paho.version>
     <nats.version>2.25.3</nats.version>
     <rabbitmq.version>5.37.0</rabbitmq.version>
+    <qpid-protonj2.version>1.5.0</qpid-protonj2.version>
     <ibmmq.version>9.3.4.1</ibmmq.version>
     <apicurio-registry.version>2.6.13.Final</apicurio-registry.version>
     <confluent-registry.version>6.2.10</confluent-registry.version>
@@ -130,6 +131,13 @@
       <groupId>com.rabbitmq</groupId>
       <artifactId>amqp-client</artifactId>
       <version>${rabbitmq.version}</version>
+    </dependency>
+
+    <!-- AMQP 1.0 related dependencies: Apache Qpid ProtonJ2 (https://qpid.apache.org/proton) -->
+    <dependency>
+      <groupId>org.apache.qpid</groupId>
+      <artifactId>protonj2-client</artifactId>
+      <version>${qpid-protonj2.version}</version>
     </dependency>
 
     <!-- IBM MQ related dependencies -->
@@ -244,6 +252,11 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>testcontainers-rabbitmq</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers-activemq</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

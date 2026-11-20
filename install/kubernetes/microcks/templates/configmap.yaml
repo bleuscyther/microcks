@@ -37,6 +37,9 @@ data:
     {{- if .Values.features.async.amqp.url }}
     features.feature.async-api.endpoint-AMQP={{ .Values.features.async.amqp.url }}
     {{- end }}
+    {{- if .Values.features.async.amqp1.url }}
+    features.feature.async-api.endpoint-AMQP1={{ .Values.features.async.amqp1.url }}
+    {{- end }}
     {{- if .Values.features.async.nats.url }}
     features.feature.async-api.endpoint-NATS={{ .Values.features.async.nats.url }}
     {{- end }}
@@ -613,6 +616,13 @@ data:
     %kube.amqp.password={{ .Values.features.async.amqp.password }}
     {{- end }}
 
+    {{- if .Values.features.async.amqp1.url }}
+    # Access to AMQP 1.0 broker.
+    %kube.amqp1.server={{ .Values.features.async.amqp1.url }}
+    %kube.amqp1.username={{ .Values.features.async.amqp1.username }}
+    %kube.amqp1.password={{ .Values.features.async.amqp1.password }}
+    {{- end }}
+
     {{- if .Values.features.async.nats.url }}
     # Access to NATS broker.
     %kube.nats.server={{ .Values.features.async.nats.url }}
@@ -671,7 +681,7 @@ data:
     {{- end }}
 
     # Configure the minion own behavioral properties.
-    %kube.minion.supported-bindings=KAFKA,WS{{ if .Values.features.async.mqtt.url }},MQTT{{ end }}{{ if .Values.features.async.amqp.url }},AMQP{{ end }}{{ if .Values.features.async.nats.url }},NATS{{ end }}{{ if .Values.features.async.googlepubsub.project }},GOOGLEPUBSUB{{ end }}{{ if .Values.features.async.sqs.region }},SQS{{ end }}{{ if .Values.features.async.sns.region }},SNS{{ end }}{{ if .Values.features.async.ibmmq.server }},IBMMQ{{ end }}
+    %kube.minion.supported-bindings=KAFKA,WS{{ if .Values.features.async.mqtt.url }},MQTT{{ end }}{{ if .Values.features.async.amqp.url }},AMQP{{ end }}{{ if .Values.features.async.amqp1.url }},AMQP1{{ end }}{{ if .Values.features.async.nats.url }},NATS{{ end }}{{ if .Values.features.async.googlepubsub.project }},GOOGLEPUBSUB{{ end }}{{ if .Values.features.async.sqs.region }},SQS{{ end }}{{ if .Values.features.async.sns.region }},SNS{{ end }}{{ if .Values.features.async.ibmmq.server }},IBMMQ{{ end }}
     %kube.minion.restricted-frequencies=3,10,30
     %kube.minion.default-avro-encoding={{ .Values.features.async.defaultAvroEncoding }}
 {{- end -}}
